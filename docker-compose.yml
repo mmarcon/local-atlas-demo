@@ -1,0 +1,19 @@
+version: '3'
+services:
+  # Atlas Local service - includes the MongoDB server and Atlas Search
+  mongodb:
+    image: mongodb/mongodb-atlas-local
+    ports:
+      - 27017:27017
+
+  # MongoDB setup service - initializes the MongoDB server with sample data, indexes, etc.
+  # The mongodb/mongodb-community-server includes the MongoDB Shell, so we can use it to run
+  # the scripts that are stored in the init directory.
+  mongosetup:
+    image: mongodb/mongodb-community-server:7.0.7-ubi8
+    depends_on:
+      - mongodb
+    volumes:
+      - ./init:/init
+      - ./init.sh/:/init.sh
+    entrypoint: ["/init.sh"]
