@@ -12,7 +12,8 @@ services:
   mongosetup:
     image: mongodb/mongodb-community-server:7.0.7-ubi8
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     volumes:
       - ./init:/init
       - ./init.sh/:/init.sh
