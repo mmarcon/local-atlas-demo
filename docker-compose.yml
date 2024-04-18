@@ -4,7 +4,7 @@ services:
   mongodb:
     image: mongodb/mongodb-atlas-local
     ports:
-      - 27017:27017
+      - 27778:27017
 
   # MongoDB setup service - initializes the MongoDB server with sample data, indexes, etc.
   # The mongodb/mongodb-community-server includes the MongoDB Shell, so we can use it to run
@@ -30,3 +30,15 @@ services:
       ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017?directConnection=true
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
+
+  app:
+    build: .
+    environment:
+      MONGO_URI: mongodb://mongodb:27017?directConnection=true
+      APP_PORT: 3333
+    ports:
+      - 3333:3333
+    restart: always
+    depends_on:
+      mongodb:
+        condition: service_healthy
