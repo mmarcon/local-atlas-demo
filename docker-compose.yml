@@ -1,4 +1,3 @@
-version: '3'
 services:
   # Atlas Local service - includes the MongoDB server and Atlas Search
   mongodb:
