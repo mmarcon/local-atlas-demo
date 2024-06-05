@@ -1,5 +1,5 @@
 services:
-  # Atlas Local service - includes the MongoDB server and Atlas Search
+  # Atlas Local service - includes the MongoDB server and Atlas Search and Vector Search
   mongodb:
     image: mongodb/mongodb-atlas-local
     ports:
