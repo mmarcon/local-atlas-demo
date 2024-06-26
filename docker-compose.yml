@@ -4,6 +4,9 @@ services:
     image: mongodb/mongodb-atlas-local
     ports:
       - 27778:27017
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
 
   # MongoDB setup service - initializes the MongoDB server with sample data, indexes, etc.
   # The mongodb/mongodb-community-server includes the MongoDB Shell, so we can use it to run
@@ -17,6 +20,9 @@ services:
       - ./init:/init
       - ./init.sh/:/init.sh
     entrypoint: ["/init.sh"]
+    environment:
+      - MONGODB_INITDB_ROOT_USERNAME=user
+      - MONGODB_INITDB_ROOT_PASSWORD=pass
 
   mongoexpress:
     image: mongo-express
@@ -26,7 +32,7 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://mongodb:27017?directConnection=true
+      ME_CONFIG_MONGODB_URL: mongodb://user:pass@mongodb:27017?directConnection=true
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
 
