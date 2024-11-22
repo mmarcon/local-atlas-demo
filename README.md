@@ -23,7 +23,7 @@ Run `docker compose build` to build the local image for the Node.js app.
 With `docker compose up` the following happens:
 
 1. the local environment is created, with core DB + Search.
-2. the `mongosetup` service runs and executes the scripts in `./init`. `.sh` files are executed with `bash`, `.js` files are executed with `mongosh`. This initialization step is defined in `init.sh`.
+2. Initialization scripts are loaded and run in alphanumerical order from `./init` which is mounted into the container's `/docker-entrypoint-initdb.d`.
 3. a `mongo-express` container is started to inspect the database.
 4. the local Node.js application is started in its own container.
 

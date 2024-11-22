@@ -1,28 +1,17 @@
 services:
   # Atlas Local service - includes the MongoDB server and Atlas Search and Vector Search
   mongodb:
-    image: mongodb/mongodb-atlas-local
+    image: mongodb/mongodb-atlas-local:8.0
     ports:
       - 27778:27017
     environment:
       - MONGODB_INITDB_ROOT_USERNAME=user
       - MONGODB_INITDB_ROOT_PASSWORD=pass
-
-  # MongoDB setup service - initializes the MongoDB server with sample data, indexes, etc.
-  # The mongodb/mongodb-community-server includes the MongoDB Shell, so we can use it to run
-  # the scripts that are stored in the init directory.
-  mongosetup:
-    image: mongodb/mongodb-community-server:7.0.7-ubi8
-    depends_on:
-      mongodb:
-        condition: service_healthy
+      # The line below is optional. It's useful in case something goes wrong during initialization
+      # so that the errors thrown by the runner and the init scripts are logged to the console
+      - RUNNER_LOG_FILE=/dev/stderr
     volumes:
-      - ./init:/init
-      - ./init.sh/:/init.sh
-    entrypoint: ["/init.sh"]
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=user
-      - MONGODB_INITDB_ROOT_PASSWORD=pass
+      - ./init:/docker-entrypoint-initdb.d
 
   mongoexpress:
     image: mongo-express
@@ -32,14 +21,14 @@ services:
     ports:
       - 8081:8081
     environment:
-      ME_CONFIG_MONGODB_URL: mongodb://user:pass@mongodb:27017?directConnection=true
+      ME_CONFIG_MONGODB_URL: mongodb://user:pass@mongodb:27017
       ME_CONFIG_BASICAUTH_USERNAME: admin
       ME_CONFIG_BASICAUTH_PASSWORD: password
 
   app:
     build: .
     environment:
-      MONGO_URI: mongodb://mongodb:27017?directConnection=true
+      MONGO_URI: mongodb://user:pass@mongodb:27017
       APP_PORT: 3333
     ports:
       - 3333:3333
